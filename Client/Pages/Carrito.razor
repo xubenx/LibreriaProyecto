@@ -1,0 +1,62 @@
+﻿@using LibreriaProyecto.Shared.Models
+@using LibreriaProyecto.Client.Pages
+@using System.Text.Json;
+@page "/carrito/{librosEnCarrito}"
+
+@page "/carrito"
+
+<div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Libreria GoT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <NavLink href="/" class="nav-link">Inicio</NavLink>
+                    </li>
+
+                    <li class="nav-item">
+                        <NavLink href="/catalogo" class="nav-link">Catálogo</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink href="/carrito" class="nav-link">Mi carrito</NavLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+@code {
+    [CascadingParameter(Name = "libroCarrito")] public List<Libro> librosEnCarrito { get; set; }
+}
+
+
+@if (librosEnCarrito != null && librosEnCarrito.Count > 0)
+{
+    <h2>Libros en el carrito:</h2>
+    <div class="row">
+        @foreach (var libro in librosEnCarrito)
+        {
+            <div class="col col-md-4" style="margin-top: 5rem;">
+                <div class="card" style="width: 25rem; height: 55rem; margin:auto;">
+                    <img src="@libro.Imagen" class="card-img-top" alt="@libro.Titulo">
+                    <div class="card-body">
+                        <h5 class="card-title">@libro.Titulo</h5>
+                        <p class="card-text">Edicion: @libro.Edicion</p>
+                        <p class="card-text">ISBN: @libro.ISBN</p>
+                        <p class="card-text">Editorial: @libro.Editorial</p>
+                        <h6 class="card-text">Precio: $@libro.Precio</h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <h2>Total a pagar: $@librosEnCarrito.Sum(libro => libro.Precio)</h2>
+}
+else
+{
+    <h2>No hay libros en el carrito.</h2>
+}

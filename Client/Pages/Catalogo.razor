@@ -1,0 +1,107 @@
+﻿@using LibreriaProyecto.Shared.Models
+@using LibreriaProyecto.Client.Pages
+@using System.Text.Json;
+@inject IJSRuntime jsRuntime
+
+
+@page "/catalogo"
+<div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" >
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Libreria GoT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <NavLink href="/" class="nav-link">Inicio</NavLink>
+                    </li>
+
+                    <li class="nav-item">
+                        <NavLink href="/catalogo" class="nav-link">Catálogo</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink href="/carrito" class="nav-link">Mi carrito</NavLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+@code {
+    List<Libro> libros = new List<Libro>();
+
+    protected override Task OnInitializedAsync()
+    {
+
+        libros = new List<Libro>
+        {
+            new Libro{Id = 1, Imagen= "https://m.media-amazon.com/images/I/91w3b+PWB3L.jpg", Titulo="Juego de tronos",Precio=1399.99f,Edicion=1996,ISBN="9789588617152",Editorial="Debolsillo"},
+            new Libro{Id = 2, Imagen= "https://www.gandhi.com.mx/media/catalog/product/9/7/9786073108409_03da.jpg?optimize=high&bg-color=255,255,255&fit=bounds&height=&width=&canvas=:",  Titulo="Choque de Reyes",Precio=1299.99f,Edicion=1998,ISBN="9789588617152",Editorial="Debolsillo"},
+            new Libro{Id = 3, Imagen= "https://m.media-amazon.com/images/I/51pUI6Ok3nL._SY344_BO1,204,203,200_.jpg", Titulo="Tormenta de espadas",Precio=1449.99f,Edicion=2000,ISBN="77895774617152",Editorial=""},
+            new Libro{Id = 4, Imagen= "https://m.media-amazon.com/images/I/A1Pq7Lpb0mL.jpg",  Titulo="Festín de cuervos",Precio=1199.99f,Edicion=2005,ISBN="450687417152",Editorial="Debolsillo"},
+            new Libro{Id = 5, Imagen= "https://m.media-amazon.com/images/I/51e2Un9PA3L._SY344_BO1,204,203,200_.jpg",  Titulo="Danza de dragones",Precio=999.99f,Edicion=2011,ISBN="658058617152",Editorial="Debolsillo"},
+            new Libro{Id = 6, Imagen= "https://images.cdn1.buscalibre.com/fit-in/360x360/cf/13/cf135bc864182cf563a6e894ff3d1695.jpg",Titulo="Fuego y sangre",Precio=899.99f,Edicion=2018,ISBN="752042888152",Editorial="Debolsillo"},
+            new Libro{Id = 7, Imagen= "https://circusa.com/wp-content/uploads/2021/04/p-esdlacomunidaddelanillo.jpg",  Titulo="La comunidad del anillo",Precio=699.99f,Edicion=2001,ISBN="8889588617152",Editorial="ED PLANETA"},
+            new Libro{Id = 8, Imagen= "https://www.planetadelibros.com.mx/usuaris/libros/fotos/48/m_libros/47930_portada_el-senor-de-los-anillos-n-0203-las-dos-torres-ne_j-r-r-tolkien_202203111314.jpg", Titulo="Las dos torres",Precio=599.99f,Edicion=2002,ISBN="978958899952",Editorial="ED PLANETA"},
+            new Libro{Id = 9, Imagen= "https://m.media-amazon.com/images/I/711htm1Ve+L.jpg", Titulo="El retorno del rey",Precio=499.99f,Edicion=2003,ISBN="870528617152",Editorial="ED PLANETA"},
+            new Libro{Id = 10, Imagen= "https://m.media-amazon.com/images/I/51TOF2gV8fL._SX327_BO1,204,203,200_.jpg", Titulo="El nombre del viento",Precio=1099.99f,Edicion=2011,ISBN="7825401312",Editorial="Plaza & Janes"}
+
+
+        };
+        return base.OnInitializedAsync();
+
+    }
+    Shared.Models.Carrito carrito = new Shared.Models.Carrito();
+
+
+    private async Task AgregarAlCarrito(Libro libro)
+    {
+        carrito.Libros.Add(libro);
+        await jsRuntime.InvokeVoidAsync("alert", "El libro ha sido agregado al carrito.");
+            
+    }
+
+
+
+
+
+
+
+
+
+    void LibroSeleccionado(object checkecValue, string nommbre, int id)
+    {
+        
+    }
+}
+
+
+    <div class="row">
+        @foreach (var libro in libros)
+        {
+
+            <div class="col col-md-4" style="margin-top: 5rem;">
+                <div class="card" style="width: 25rem; height: 55rem; margin:auto;">
+                    <img src="@libro.Imagen" class="card-img-top" alt="@libro.Titulo">
+                    <div class="card-body">
+                        <h5 class="card-title">@libro.Titulo</h5>
+                        <p class="card-text">Edicion:@libro.Edicion</p>
+                        <p class="card-text">ISBN:@libro.ISBN</p>
+                        <p class="card-text">Editorial:@libro.Editorial</p>
+
+                        <h6 class="card-text">Precio: $@libro.Precio</h6>
+                        <button class="btn btn-primary" @onclick="() => AgregarAlCarrito(libro)">Agregar al carrito</button>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+     <CascadingValue Value="@carrito" Name="libroCarrito">
+            <Carrito />
+     </CascadingValue>
